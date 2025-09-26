@@ -1,104 +1,98 @@
 #include <stdio.h>
 
-// Desafio Super Trunfo - Países
-// Tema 1 - Cadastro das cartas
-// Objetivo: No nível aventureiro
+#define MAX_CITY_NAME 50
+#define CODE_SIZE 4
 
-int main()
-{
-    // Card One
-    char state_card_one;
-    char card_code_card_one[4];
-    char city_name_card_one[50];
-    int population_card_one;
-    float area_card_one;
-    float gdp_card_one;
-    int number_of_touristic_points_card_one;
-    float population_density_card_one;
-    float gdp_per_capita_card_one;
+typedef struct {
+    char state;
+    char code[CODE_SIZE];
+    char cityName[MAX_CITY_NAME];
+    unsigned long int population;
+    float area;
+    float gdp;
+    int touristSpots;
+    float populationDensity;
+    float gdpPerCapita;
+    float superPower;
+} Card;
 
-    // Card Two
-    char state_card_two;
-    char card_code_card_two[4];
-    char city_name_card_two[50];
-    int population_card_two;
-    float area_card_two;
-    float gdp_card_two;
-    int number_of_touristic_points_card_two;
-    float population_density_card_two;
-    float gdp_per_capita_card_two;
+void calculateAttributes(Card *c) {
+    c->populationDensity = (float)c->population / c->area;
+    c->gdpPerCapita = (c->gdp * 1000000000.0f) / c->population;
+    c->superPower = (float)c->population 
+                  + c->area 
+                  + c->gdp 
+                  + c->touristSpots 
+                  + c->gdpPerCapita 
+                  + (1.0f / c->populationDensity); 
+}
 
-    // Leitura dos dados da carta 1
-    printf("Digite os dados da Carta 1:\n");
-    printf("Estado (letra de A a H): ");
-    scanf(" %c", &state_card_one);
-    printf("Código da Carta (ex: A01): ");
-    scanf("%s", card_code_card_one);
+void readCardData(Card *c, int number) {
+    printf("Digite os dados da Carta %d:\n", number);
+    printf("Estado (A-H): ");
+    scanf(" %c", &c->state);
+    printf("Código (ex: A01): ");
+    scanf("%s", c->code);
     printf("Nome da Cidade: ");
-    scanf(" %49[^\n]", city_name_card_one);
+    scanf(" %49[^\n]", c->cityName);
     printf("População: ");
-    scanf("%d", &population_card_one);
+    scanf("%lu", &c->population);
     printf("Área (km²): ");
-    scanf("%f", &area_card_one);
+    scanf("%f", &c->area);
     printf("PIB (bilhões de reais): ");
-    scanf("%f", &gdp_card_one);
+    scanf("%f", &c->gdp);
     printf("Número de Pontos Turísticos: ");
-    scanf("%d", &number_of_touristic_points_card_one);
-
+    scanf("%d", &c->touristSpots);
     printf("\n");
+}
 
-    // Leitura dos dados da carta 2
-    printf("Digite os dados da Carta 2:\n");
-    printf("Estado (letra de A a H): ");
-    scanf(" %c", &state_card_two);
-    printf("Código da Carta (ex: A01): ");
-    scanf("%s", card_code_card_two);
-    printf("Nome da Cidade: ");
-    scanf(" %49[^\n]", city_name_card_two);
-    printf("População: ");
-    scanf("%d", &population_card_two);
-    printf("Área (km²): ");
-    scanf("%f", &area_card_two);
-    printf("PIB (bilhões de reais): ");
-    scanf("%f", &gdp_card_two);
-    printf("Número de Pontos Turísticos: ");
-    scanf("%d", &number_of_touristic_points_card_two);
-
+void showCard(Card c, int number) {
+    printf("Carta %d:\n", number);
+    printf("Estado: %c\n", c.state);
+    printf("Código: %s\n", c.code);
+    printf("Nome da Cidade: %s\n", c.cityName);
+    printf("População: %lu\n", c.population);
+    printf("Área: %.2f km²\n", c.area);
+    printf("PIB: %.2f bilhões de reais\n", c.gdp);
+    printf("Número de Pontos Turísticos: %d\n", c.touristSpots);
+    printf("Densidade Populacional: %.2f hab/km²\n", c.populationDensity);
+    printf("PIB per Capita: %.2f reais\n", c.gdpPerCapita);
+    printf("Super Poder: %.2f\n", c.superPower);
     printf("\n");
+}
 
-    // Cálculos para carta 1
-    population_density_card_one = (float)population_card_one / area_card_one;
-    gdp_per_capita_card_one = (gdp_card_one * 1000000000.0) / population_card_one;
+void printCardField(const char *fieldName, int cardWins) {
+    if (cardWins) {
+        printf("%s: Carta 1 venceu (%d)\n", fieldName, cardWins);
+    } else {
+        printf("%s: Carta 2 venceu (%d)\n", fieldName, cardWins);
+    }
+}
 
-    // Cálculos para carta 2
-    population_density_card_two = (float)population_card_two / area_card_two;
-    gdp_per_capita_card_two = (gdp_card_two * 1000000000.0) / population_card_two;
+void compareCards(Card c1, Card c2) {
+    printf("Comparação de Cartas:\n");
+    printCardField("População", c1.population > c2.population);
+    printCardField("Área", c1.area > c2.area);
+    printCardField("PIB", c1.gdp > c2.gdp);
+    printCardField("Pontos Turísticos", c1.touristSpots > c2.touristSpots);
+    printCardField("Densidade Populacional", c1.populationDensity < c2.populationDensity);
+    printCardField("PIB per Capita", c1.gdpPerCapita > c2.gdpPerCapita);
+    printCardField("Super Poder", c1.superPower > c2.superPower);
+}
 
-    // Área para exibição dos dados da cidade
-    printf("Carta 1:\n");
-    printf("Estado: %c\n", state_card_one);
-    printf("Código: %s\n", card_code_card_one);
-    printf("Nome da Cidade: %s\n", city_name_card_one);
-    printf("População: %d\n", population_card_one);
-    printf("Área: %.2f km²\n", area_card_one);
-    printf("PIB: %.2f bilhões de reais\n", gdp_card_one);
-    printf("Número de Pontos Turísticos: %d\n", number_of_touristic_points_card_one);
-    printf("Densidade Populacional: %.2f hab/km²\n", population_density_card_one);
-    printf("PIB per Capita: %.2f reais\n", gdp_per_capita_card_one);
+int main() {
+    Card c1, c2;
 
-    printf("\n");
+    readCardData(&c1, 1);
+    readCardData(&c2, 2);
 
-    // Exibição dos dados da carta 2
-    printf("Carta 2:\n");
-    printf("Estado: %c\n", state_card_two);
-    printf("Código: %s\n", card_code_card_two);
-    printf("Nome da Cidade: %s\n", city_name_card_two);
-    printf("População: %d\n", population_card_two);
-    printf("Área: %.2f km²\n", area_card_two);
-    printf("PIB: %.2f bilhões de reais\n", gdp_card_two);
-    printf("Número de Pontos Turísticos: %d\n", number_of_touristic_points_card_two);
-    printf("Densidade Populacional: %.2f hab/km²\n", population_density_card_two);
-    printf("PIB per Capita: %.2f reais\n", gdp_per_capita_card_two);
-    
+    calculateAttributes(&c1);
+    calculateAttributes(&c2);
+
+    showCard(c1, 1);
+    showCard(c2, 2);
+
+    compareCards(c1, c2);
+
     return 0;
 }
